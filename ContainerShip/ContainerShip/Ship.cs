@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ContainerShip
 {
-    public class Ship
+    public class Ship : IDrawObject
     {
         /// <summary>
         /// Скорость
@@ -20,22 +20,23 @@ namespace ContainerShip
         /// Цвет
         /// </summary>
         public Color BodyColor { private set; get; }
+        public float Step => Speed * 100 / Weight;
         /// <summary>
         /// Левая координата отрисовки 
         /// </summary>
-        private float? _startPosX = null;
+        protected float? _startPosX = null;
         /// <summary>
         /// Верхняя кооридната отрисовки 
         /// </summary>
-        private float? _startPosY = null;
+        protected float? _startPosY = null;
         /// <summary>
         /// Ширина окна отрисовки
         /// </summary>
-        private int? _pictureWidth = null;
+        protected int? _pictureWidth = null;
         /// <summary>
         /// Высота окна отрисовки
         /// </summary>
-        private int? _pictureHeight = null;
+        protected int? _pictureHeight = null;
         /// <summary>
         /// Ширина отрисовки 
         /// </summary>
@@ -45,25 +46,38 @@ namespace ContainerShip
         /// </summary>
         protected readonly int _shipHeight = 50;
         /// <summary>
+        /// Признак, что объект переместился
+        /// </summary>
+        protected bool _makeStep;
+        /// <summary>
         /// Инициализация свойств
         /// </summary>
         /// <param name="speed">Скорость</param>
         /// <param name="weight">Веc</param>
         /// <param name="bodyColor">Цвет</param>
-        public void Init(int speed, float weight, Color bodyColor)
+        public Ship(int speed, float weight, Color bodyColor)
         {
             Speed = speed;
             Weight = weight;
             BodyColor = bodyColor;
         }
         /// <summary>
-        /// Установка позиции
+        /// Конструктор
         /// </summary>
-        /// <param name="x">Координата X</param>
-        /// <param name="y">Координата Y</param>
-        /// <param name="width">Ширина картинки</param>
-        /// <param name="height">Высота картинки</param>
-        public void SetPosition(int x, int y, int width, int height)
+        /// <param name="speed">Скорость</param>
+        /// <param name="weight">Вес </param>
+        /// <param name="bodyColor">Цвет</param>
+        /// <param name="shipWidth">Ширина объекта</param>
+        /// <param name="shipHeight">Высота объекта</param>
+        protected Ship(int speed, float weight, Color bodyColor, int shipWidth, int shipHeight)
+        {
+            Speed = speed;
+            Weight = weight;
+            BodyColor = bodyColor;
+            _shipWidth = shipWidth;
+            _shipHeight = shipHeight;
+        }
+        public void SetObject(float x, float y, int width, int height)
         {
             _startPosX = x;
             _startPosY = y;
@@ -92,41 +106,47 @@ namespace ContainerShip
         /// Изменение направления пермещения
         /// </summary>
         /// <param name="direction">Направление</param>
-        public void MoveTransport(Direction direction)
+        /// <param name="leftIndent">Отступ от левого края,чтобы объект не выходил за границы</param>
+        /// <param name="topIndent">Отступ от верхнего края,чтобы объект не выходил за границы</param>
+        public virtual void MoveTransport(Direction direction, int leftIndent = 0, int topIndent = 0)
         {
+            _makeStep = false;
             if (!_pictureWidth.HasValue || !_pictureHeight.HasValue)
             {
                 return;
             }
-            float step = Speed * 100 / Weight;
             switch (direction)
             {
                 // вправо
                 case Direction.Right:
-                    if (_startPosX + _shipWidth + step < _pictureWidth)
+                    if (_startPosX + _shipWidth + Step < _pictureWidth)
                     {
-                        _startPosX += step;
+                        _startPosX += Step;
+                        _makeStep = true;
                     }
                     break;
                 //влево
                 case Direction.Left:
-                    if (_startPosX - step > 0)
+                    if (_startPosX - Step > 0)
                     {
-                        _startPosX -= step;
+                        _startPosX -= Step;
+                        _makeStep = true;
                     }
                     break;
                 //вверх
                 case Direction.Up:
-                    if (_startPosY - step > 0)
+                    if (_startPosY - Step > 0)
                     {
-                        _startPosY -= step;
+                        _startPosY -= Step;
+                        _makeStep = true;
                     }
                     break;
                 //вниз
                 case Direction.Down:
-                    if (_startPosY + _shipHeight + step < _pictureHeight)
+                    if (_startPosY + _shipHeight + Step < _pictureHeight)
                     {
-                        _startPosY += step;
+                        _startPosY += Step;
+                        _makeStep = true;
                     }
                     break;
             }
@@ -135,7 +155,7 @@ namespace ContainerShip
         /// Отрисовка
         /// </summary>
         /// <param name="g"></param>
-        public void DrawTransport(Graphics g)
+        public virtual void DrawTransport(Graphics g)
         {
             if (!_startPosX.HasValue || !_startPosY.HasValue)
             {
@@ -147,11 +167,20 @@ namespace ContainerShip
             g.FillRectangle(br, _startPosX.Value + 4, _startPosY.Value + 21, 72, 6);
             g.FillRectangle(br, _startPosX.Value + 10, _startPosY.Value + 21, 57, 9);
             g.FillRectangle(br, _startPosX.Value + 17, _startPosY.Value + 21, 42, 13);
-            g.FillRectangle(br, _startPosX.Value + 10, _startPosY.Value + 6, 50, 14);
-
-
-
-
+            g.FillRectangle(br, _startPosX.Value + 10, _startPosY.Value + 6, 25, 14);
+        }
+        public bool MoveObject(Direction direction)
+        {
+            MoveTransport(direction);
+            return _makeStep;
+        }
+        public void DrawObject(Graphics g)
+        {
+            DrawTransport(g);
+        }
+        public (float Left, float Right, float Top, float Bottom) GetCurrentPosition()
+        {
+            return (_startPosX.Value, _startPosX.Value + _shipWidth, _startPosY.Value, _startPosY.Value + _shipHeight);
         }
     }
 }

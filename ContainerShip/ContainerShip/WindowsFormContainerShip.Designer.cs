@@ -38,6 +38,9 @@
             this.buttonLeft = new System.Windows.Forms.Button();
             this.buttonRight = new System.Windows.Forms.Button();
             this.buttonCreate = new System.Windows.Forms.Button();
+            this.buttonModify = new System.Windows.Forms.Button();
+            this.buttonRunBorderTest = new System.Windows.Forms.Button();
+            this.comboBoxTesting = new System.Windows.Forms.ComboBox();
             this.statusStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.SuspendLayout();
@@ -141,11 +144,44 @@
             this.buttonCreate.UseVisualStyleBackColor = true;
             this.buttonCreate.Click += new System.EventHandler(this.buttonCreate_Click);
             // 
+            // buttonModify
+            // 
+            this.buttonModify.Font = new System.Drawing.Font("Arial Narrow", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.buttonModify.Location = new System.Drawing.Point(104, 511);
+            this.buttonModify.Name = "buttonModify";
+            this.buttonModify.Size = new System.Drawing.Size(103, 22);
+            this.buttonModify.TabIndex = 7;
+            this.buttonModify.Text = "Модифицировать";
+            this.buttonModify.UseVisualStyleBackColor = true;
+            this.buttonModify.Click += new System.EventHandler(this.ButtonCreateModify_Click);
+            // 
+            // buttonRunBorderTest
+            // 
+            this.buttonRunBorderTest.Font = new System.Drawing.Font("Arial Narrow", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.buttonRunBorderTest.Location = new System.Drawing.Point(7, 7);
+            this.buttonRunBorderTest.Name = "buttonRunBorderTest";
+            this.buttonRunBorderTest.Size = new System.Drawing.Size(103, 22);
+            this.buttonRunBorderTest.TabIndex = 8;
+            this.buttonRunBorderTest.Text = "Провести тест";
+            this.buttonRunBorderTest.UseVisualStyleBackColor = true;
+            this.buttonRunBorderTest.Click += new System.EventHandler(this.ButtonRunBorderTest_Click);
+            // 
+            // comboBoxTesting
+            // 
+            this.comboBoxTesting.FormattingEnabled = true;
+            this.comboBoxTesting.Location = new System.Drawing.Point(116, 6);
+            this.comboBoxTesting.Name = "comboBoxTesting";
+            this.comboBoxTesting.Size = new System.Drawing.Size(110, 23);
+            this.comboBoxTesting.TabIndex = 9;
+            // 
             // WindowsFormContainerShip
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1017, 558);
+            this.Controls.Add(this.comboBoxTesting);
+            this.Controls.Add(this.buttonRunBorderTest);
+            this.Controls.Add(this.buttonModify);
             this.Controls.Add(this.buttonCreate);
             this.Controls.Add(this.buttonRight);
             this.Controls.Add(this.buttonLeft);
@@ -176,5 +212,8 @@
         private Button buttonLeft;
         private Button buttonRight;
         private Button buttonCreate;
+        private Button buttonModify;
+        private Button buttonRunBorderTest;
+        private ComboBox comboBoxTesting;
     }
 }
