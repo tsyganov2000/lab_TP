@@ -174,10 +174,7 @@ namespace ContainerShip
             MoveTransport(direction);
             return _makeStep;
         }
-        public void DrawObject(Graphics g)
-        {
-            DrawTransport(g);
-        }
+
         public (float Left, float Right, float Top, float Bottom) GetCurrentPosition()
         {
             return (_startPosX.Value, _startPosX.Value + _shipWidth, _startPosY.Value, _startPosY.Value + _shipHeight);
