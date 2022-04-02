@@ -50,6 +50,24 @@ namespace ContainerShip
         /// </summary>
         protected bool _makeStep;
         /// <summary>
+        /// Разделитель для записи информации по объекту в файл
+        /// </summary>
+        protected readonly char _separator = ';';
+        /// <summary>
+        /// Конструктор для загрузки с файла
+        /// </summary>
+        /// <param name="info">Информация по объекту</param>
+        public Ship(string info)
+        {
+            string[] strs = info.Split(_separator);
+            if (strs.Length >= 3)
+            {
+                Speed = Convert.ToInt32(strs[0]);
+                Weight = Convert.ToInt32(strs[1]);
+                MainColor = Color.FromName(strs[2]);
+            }
+        }
+        /// <summary>
         /// Инициализация свойств
         /// </summary>
         /// <param name="speed">Скорость</param>
@@ -77,7 +95,6 @@ namespace ContainerShip
             _shipWidth = shipWidth;
             _shipHeight = shipHeight;
         }
-        public void SetMainColor(Color color) => MainColor = color;
         public void SetObject(float x, float y, int width, int height)
         {
             _startPosX = x;
@@ -85,6 +102,8 @@ namespace ContainerShip
             _pictureWidth = width;
             _pictureHeight = height;
         }
+        public override string ToString() => $"{Speed}{_separator}{Weight}{_separator}{MainColor.Name}";
+        public void SetMainColor(Color color) => MainColor = color;
         /// <summary>
         /// Смена границ формы отрисовки
         /// </summary>
