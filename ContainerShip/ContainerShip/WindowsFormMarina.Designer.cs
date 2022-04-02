@@ -29,8 +29,6 @@
         private void InitializeComponent()
         {
             this.pictureBoxMarina = new System.Windows.Forms.PictureBox();
-            this.buttonAddShip = new System.Windows.Forms.Button();
-            this.buttonAddSuperShip = new System.Windows.Forms.Button();
             this.groupBoxPlace = new System.Windows.Forms.GroupBox();
             this.buttonPickUp = new System.Windows.Forms.Button();
             this.maskedTextBoxPlace = new System.Windows.Forms.MaskedTextBox();
@@ -40,6 +38,7 @@
             this.buttonAddMarina = new System.Windows.Forms.Button();
             this.listBoxMarina = new System.Windows.Forms.ListBox();
             this.buttonDelMarina = new System.Windows.Forms.Button();
+            this.buttonAddShip = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMarina)).BeginInit();
             this.groupBoxPlace.SuspendLayout();
             this.SuspendLayout();
@@ -53,34 +52,14 @@
             this.pictureBoxMarina.TabIndex = 0;
             this.pictureBoxMarina.TabStop = false;
             // 
-            // buttonAddShip
-            // 
-            this.buttonAddShip.Location = new System.Drawing.Point(642, 260);
-            this.buttonAddShip.Name = "buttonAddShip";
-            this.buttonAddShip.Size = new System.Drawing.Size(117, 43);
-            this.buttonAddShip.TabIndex = 1;
-            this.buttonAddShip.Text = "Пришвартовать корабль";
-            this.buttonAddShip.UseVisualStyleBackColor = true;
-            this.buttonAddShip.Click += new System.EventHandler(this.buttonAddShip_Click);
-            // 
-            // buttonAddSuperShip
-            // 
-            this.buttonAddSuperShip.Location = new System.Drawing.Point(643, 309);
-            this.buttonAddSuperShip.Name = "buttonAddSuperShip";
-            this.buttonAddSuperShip.Size = new System.Drawing.Size(117, 43);
-            this.buttonAddSuperShip.TabIndex = 2;
-            this.buttonAddSuperShip.Text = "Пришвартовать контейнеровоз";
-            this.buttonAddSuperShip.UseVisualStyleBackColor = true;
-            this.buttonAddSuperShip.Click += new System.EventHandler(this.buttonAddSuperShip_Click);
-            // 
             // groupBoxPlace
             // 
             this.groupBoxPlace.Controls.Add(this.buttonPickUp);
             this.groupBoxPlace.Controls.Add(this.maskedTextBoxPlace);
             this.groupBoxPlace.Controls.Add(this.labelPlace);
-            this.groupBoxPlace.Location = new System.Drawing.Point(642, 358);
+            this.groupBoxPlace.Location = new System.Drawing.Point(644, 329);
             this.groupBoxPlace.Name = "groupBoxPlace";
-            this.groupBoxPlace.Size = new System.Drawing.Size(118, 90);
+            this.groupBoxPlace.Size = new System.Drawing.Size(115, 99);
             this.groupBoxPlace.TabIndex = 3;
             this.groupBoxPlace.TabStop = false;
             this.groupBoxPlace.Text = "Забрать корабль";
@@ -157,19 +136,28 @@
             this.buttonDelMarina.UseVisualStyleBackColor = true;
             this.buttonDelMarina.Click += new System.EventHandler(this.buttonDelMarina_Click);
             // 
+            // buttonAddShip
+            // 
+            this.buttonAddShip.Location = new System.Drawing.Point(644, 242);
+            this.buttonAddShip.Name = "buttonAddShip";
+            this.buttonAddShip.Size = new System.Drawing.Size(115, 64);
+            this.buttonAddShip.TabIndex = 8;
+            this.buttonAddShip.Text = "Добавить судно";
+            this.buttonAddShip.UseVisualStyleBackColor = true;
+            this.buttonAddShip.Click += new System.EventHandler(this.ButtonAddShip_Click);
+            // 
             // WindowsFormMarina
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(764, 454);
+            this.Controls.Add(this.buttonAddShip);
             this.Controls.Add(this.buttonDelMarina);
             this.Controls.Add(this.listBoxMarina);
             this.Controls.Add(this.buttonAddMarina);
             this.Controls.Add(this.textBoxMarina);
             this.Controls.Add(this.labelMarina);
             this.Controls.Add(this.groupBoxPlace);
-            this.Controls.Add(this.buttonAddSuperShip);
-            this.Controls.Add(this.buttonAddShip);
             this.Controls.Add(this.pictureBoxMarina);
             this.Name = "WindowsFormMarina";
             this.Text = "Пристань";
@@ -184,8 +172,6 @@
         #endregion
 
         private PictureBox pictureBoxMarina;
-        private Button buttonAddShip;
-        private Button buttonAddSuperShip;
         private GroupBox groupBoxPlace;
         private Button buttonPickUp;
         private MaskedTextBox maskedTextBoxPlace;
@@ -195,5 +181,6 @@
         private Button buttonAddMarina;
         private ListBox listBoxMarina;
         private Button buttonDelMarina;
+        private Button buttonAddShip;
     }
 }

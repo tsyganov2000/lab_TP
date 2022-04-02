@@ -20,6 +20,8 @@ namespace ContainerShip
         /// Признак наличия контейнеров
         /// </summary>
         public bool Container { private set; get; }
+        public void SetDopColor(Color color) => DopColor = color;
+
         /// <summary>
         /// Инициализация свойств
         /// </summary>
