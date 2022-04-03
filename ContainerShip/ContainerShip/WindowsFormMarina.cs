@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using NLog;
+using System;
 
 namespace ContainerShip
 {
@@ -15,11 +17,17 @@ namespace ContainerShip
         /// <summary>
         /// Объект от класса-коллекции пристаней
         /// </summary>
-        private MarinaCollection _marinaCollection;
+        private readonly MarinaCollection _marinaCollection;
+        /// <summary>
+        /// Логгер
+        /// </summary>
+        private readonly Logger logger;
+
         public WindowsFormMarina()
         {
             InitializeComponent();
             _marinaCollection = new MarinaCollection(pictureBoxMarina.Width, pictureBoxMarina.Height);
+            logger = LogManager.GetCurrentClassLogger();
         }
         /// <summary>
         /// Заполнение listBoxLevels
@@ -59,7 +67,7 @@ namespace ContainerShip
 
         }
         /// <summary>
-        /// Обработка нажатия кнопки "Добавить парковку"
+        /// Обработка нажатия кнопки "Добавить пристань"
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -68,13 +76,15 @@ namespace ContainerShip
             if (string.IsNullOrEmpty(textBoxMarina.Text))
             {
                 MessageBox.Show("Введите название пристани", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                logger.Warn($"Ошибка: не введено название пристани");
                 return;
             }
+            logger.Info($"Добавили пристань {textBoxMarina.Text}");
             _marinaCollection.AddMarina(textBoxMarina.Text);
             ReloadLevels();
         }
         /// <summary>
-        /// Обработка нажатия кнопки "Удалить парковку"
+        /// Обработка нажатия кнопки "Удалить пристань"
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -86,6 +96,7 @@ namespace ContainerShip
                     "Удаление", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
                     _marinaCollection.DelMarina(listBoxMarina.SelectedItem.ToString());
+                    logger.Info($"Удалили пристань  {listBoxMarina.SelectedItem}");
                     ReloadLevels();
                 }
             }
@@ -98,16 +109,30 @@ namespace ContainerShip
         /// <param name="e"></param>
         private void buttonPickUp_Click(object sender, EventArgs e)
         {
-            if (listBoxMarina.SelectedIndex > -1 && maskedTextBoxPlace.Text != "")
+            if (listBoxMarina.SelectedIndex > -1 && maskedTextBoxPlace.Text !="")
             {
-                var ship = _marinaCollection[listBoxMarina.SelectedItem.ToString()] - Convert.ToInt32(maskedTextBoxPlace.Text);
-                if (ship != null)
+                try
                 {
-                    WindowsFormContainerShip form = new WindowsFormContainerShip();
-                    form.SetShip(ship);
-                    form.ShowDialog();
+                    var ship = _marinaCollection[listBoxMarina.SelectedItem.ToString()] - Convert.ToInt32(maskedTextBoxPlace.Text);
+                    if (ship != null)
+                    {
+                        WindowsFormContainerShip form = new WindowsFormContainerShip();
+                        form.SetShip(ship);
+                        form.ShowDialog();
+                    }
+                    logger.Info($"Изъято судно {ship} с места {maskedTextBoxPlace.Text} ");
+                    Draw();
                 }
-                Draw();
+                catch (MarinaNotFoundException ex)
+                {
+                    MessageBox.Show(ex.Message, "Не найдено", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    logger.Warn($"Ошибка: не найдено судно на месте {maskedTextBoxPlace.Text} ");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Неизвестная ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    logger.Warn($"Ошибка: неизвестная ошибка");
+                }
             }
 
         }
@@ -116,7 +141,11 @@ namespace ContainerShip
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void listBoxMarina_SelectedIndexChanged(object sender, EventArgs e) => Draw();
+        private void listBoxMarina_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Draw();
+            logger.Info($"Перешли на парковку {listBoxMarina.SelectedItem}");
+        }
 
         /// <summary>
         /// Обработка нажатия кнопки "Добавить судно"
@@ -130,23 +159,40 @@ namespace ContainerShip
             windowsFormShipConfig.Show();
         }
         /// <summary>
-        /// Метод добавления машины
+        /// Метод добавления судна
         /// </summary>
         /// <param name="car"></param>
         private void AddShip(ITransport ship)
         {
             if (ship != null && listBoxMarina.SelectedIndex > -1)
             {
-                if
-                ((_marinaCollection[listBoxMarina.SelectedItem.ToString()]) + ship)
+                try
                 {
+                    if
+                    (_marinaCollection[listBoxMarina.SelectedItem.ToString()] + ship)
+                    {
+                        Draw();
+                        logger.Info($"Добавлено судно {ship}");
+                    }
+                    else
+                    {
+                        MessageBox.Show("Судно не удалось поставить");
+                        logger.Warn($"Ошибка: судно не удалось поставить");
+                    }
                     Draw();
                 }
-                else
+                catch (MarinaOverflowException ex)
                 {
-                    MessageBox.Show("Судно не удалось поставить");
+                    MessageBox.Show(ex.Message, "Переполнение", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    logger.Warn($"Ошибка: пристань переполнена");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Неизвестная ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    logger.Warn($"Ошибка: неизвестная ошибка");
                 }
             }
+
         }
         /// <summary>
         /// Обработка нажатия пункта меню "Сохранить"
@@ -157,13 +203,18 @@ namespace ContainerShip
         {
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                if (_marinaCollection.SaveData(saveFileDialog.FileName))
+                try
                 {
-                    MessageBox.Show("Сохранение прошло успешно", "Результат", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    _marinaCollection.SaveData(saveFileDialog.FileName);
+                    MessageBox.Show("Сохранение прошло успешно",
+                    "Результат", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    logger.Info("Сохранено в файл " + saveFileDialog.FileName);
                 }
-                else
+                catch (Exception ex)
                 {
-                    MessageBox.Show("Не сохранилось", "Результат",  MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(ex.Message, ex.GetType().Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Не сохранилось", "Результат", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    logger.Warn($"Ошибка: не удалось сохранить");
                 }
             }
 
@@ -178,15 +229,19 @@ namespace ContainerShip
         {
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                if (_marinaCollection.LoadData(openFileDialog.FileName))
+                try
                 {
+                    _marinaCollection.LoadData(openFileDialog.FileName);
                     MessageBox.Show("Загрузили", "Результат", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    logger.Info("Загружено из файла " + openFileDialog.FileName);
                     ReloadLevels();
                     Draw();
                 }
-                else
+                catch (Exception ex)
                 {
+                    MessageBox.Show(ex.Message, ex.GetType().Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     MessageBox.Show("Не загрузили", "Результат", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    logger.Warn($"Ошибка: не удалось загрузить");
                 }
             }
 
