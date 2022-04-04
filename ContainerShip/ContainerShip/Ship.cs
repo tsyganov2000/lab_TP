@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections;
 
 namespace ContainerShip
 {
-    public class Ship : ITransport
+    public class Ship : ITransport, IEquatable<Ship>
     {
         /// <summary>
         /// Скорость
@@ -198,6 +199,46 @@ namespace ContainerShip
         public (float Left, float Right, float Top, float Bottom) GetCurrentPosition()
         {
             return (_startPosX.Value, _startPosX.Value + _shipWidth, _startPosY.Value, _startPosY.Value + _shipHeight);
+        }
+        /// <summary>
+        /// Метод интерфейса IEquatable для класса Ship
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool Equals(Ship other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+            if (GetType().Name != other.GetType().Name)
+            {
+                return false;
+            }
+            if (MainColor != other.MainColor)
+            {
+                return false;
+            }
+            return true;
+        }
+        public override bool Equals(Object obj)
+        {
+            if (obj == null)
+            {
+                return false;
+            }
+            if (!(obj is Ship shipObj))
+            {
+                return false;
+            }
+            else
+            {
+                return Equals(shipObj);
+            }
+        }
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
     }
 }

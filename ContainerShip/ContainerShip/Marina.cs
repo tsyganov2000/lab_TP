@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -62,6 +63,10 @@ namespace ContainerShip
             if (p._places.Count == p._maxCount + 1)
             {
                 throw new MarinaOverflowException();
+            }
+            if (p._places.Contains(ship))
+            {
+                throw new Exception();
             }
             for (int i = 0; i < p._maxCount; i++)
             {
@@ -136,5 +141,9 @@ namespace ContainerShip
                 yield return elem;
             }
         }
+        /// <summary>
+        /// Сортировка автомобилей на парковке
+        /// </summary>
+        public void Sort() => _places.Sort((IComparer<T>)new ShipComparer());
     }
 }

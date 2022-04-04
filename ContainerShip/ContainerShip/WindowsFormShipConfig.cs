@@ -160,6 +160,20 @@ namespace ContainerShip
                 }
             }
         }
+        private void LabelDopColor_DragEnter(object sender, DragEventArgs e)
+        {
+            if (_ship is SuperShip)
+            {
+                if (e.Data.GetDataPresent(typeof(Color)))
+                {
+                    e.Effect = DragDropEffects.Copy;
+                }
+                else
+                {
+                    e.Effect = DragDropEffects.None;
+                }
+            }
+        }
         /// <summary>
         /// Добавление машины
         /// </summary>
