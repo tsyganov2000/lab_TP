@@ -87,7 +87,7 @@ namespace ContainerShip
         /// </summary>
         /// <param name="filename">Путь и имя файла</param>
         /// <returns></returns>
-        public bool SaveData(string filename)
+        public void SaveData(string filename)
         {
             if (File.Exists(filename))
             {
@@ -110,18 +110,17 @@ namespace ContainerShip
                     }
                 }
             }
-            return true;
         }
         /// <summary>
         /// Загрузка нформации по суднам на пристанях из файла
         /// </summary>
         /// <param name="filename"></param>
         /// <returns></returns>
-        public bool LoadData(string filename)
+        public void LoadData(string filename)
         {
             if (!File.Exists(filename))
             {
-                return false;
+                throw new FileNotFoundException(filename);
             }
             string bufferTextFromFile = "";
             using (FileStream fs = new FileStream(filename, FileMode.Open))
@@ -133,11 +132,12 @@ namespace ContainerShip
                     bufferTextFromFile += temp.GetString(b);
                 }
             }
-            var strs = bufferTextFromFile.Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+            var strs = bufferTextFromFile.Split(new char[] { '\n', '\r' },
+            StringSplitOptions.RemoveEmptyEntries);
             if (!strs[0].Contains("MarinaCollection"))
             {
                 //если нет такой записи, то это не те данные
-                return false;
+                throw new FileFormatException();
             }
             //очищаем записи
             _marinaStages.Clear();
@@ -161,16 +161,8 @@ namespace ContainerShip
                 {
                     ship = new SuperShip(strs[i].Split(separator)[1]);
                 }
-                var result = _marinaStages[key] + ship;
-                if (!result)
-                {
-                    return false;
-                }
+                _ = _marinaStages[key] + ship;
             }
-            return true;
-
         }
-
-
     }
 }

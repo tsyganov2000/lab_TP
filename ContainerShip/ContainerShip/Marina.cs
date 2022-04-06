@@ -61,7 +61,7 @@ namespace ContainerShip
         {
             if (p._places.Count == p._maxCount + 1)
             {
-                return false;
+                throw new MarinaOverflowException();
             }
             for (int i = 0; i < p._maxCount; i++)
             {
@@ -72,7 +72,7 @@ namespace ContainerShip
                     return true;
                 }
             }
-            return false;
+            throw new MarinaOverflowException();
         }
         /// <summary>
         /// Перегрузка оператора вычитания
@@ -87,14 +87,13 @@ namespace ContainerShip
             {
                 return null;
             }
-            ;
             if (p._places[index] != null)
             {
                 T ship = p._places[index];
                 p._places[index] = null;
                 return ship;
             }
-            return null;
+            throw new MarinaNotFoundException(index);
         }
         /// <summary>
         /// Метод отрисовки пристани
