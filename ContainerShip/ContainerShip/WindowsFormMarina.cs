@@ -67,8 +67,7 @@ namespace ContainerShip
         {
             if (string.IsNullOrEmpty(textBoxMarina.Text))
             {
-                MessageBox.Show("Введите название парковки", "Ошибка",
-                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Введите название пристани", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             _marinaCollection.AddMarina(textBoxMarina.Text);
@@ -91,43 +90,7 @@ namespace ContainerShip
                 }
             }
         }
-        /// <summary>
-        /// Обработка нажатия кнопки "Пришвартовать корабль"
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void buttonAddShip_Click(object sender, EventArgs e)
-        {
-            if (listBoxMarina.SelectedIndex > -1)
-            {
-                ColorDialog dialog = new ColorDialog();
-                if (dialog.ShowDialog() == DialogResult.OK)
-                {
-                    AddToMarina(new Ship(100, 1000, dialog.Color));
-                }
-            }
-        }
-        /// <summary>
-        /// Обработка нажатия кнопки "Пришвартовать контейнеровоз"
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void buttonAddSuperShip_Click(object sender, EventArgs e)
-        {
-            if (listBoxMarina.SelectedIndex > -1)
-            {
-                ColorDialog dialog = new ColorDialog();
-                if (dialog.ShowDialog() == DialogResult.OK)
-                {
-                    ColorDialog dialogDop = new ColorDialog();
-                    if (dialogDop.ShowDialog() == DialogResult.OK)
-                    {
-                        AddToMarina(new SuperShip(100, 1000, dialog.Color, dialogDop.Color, true, true));
-                    }
-                }
-            }
-
-        }
+        
         /// <summary>
         /// Обработка нажатия кнопки "Забрать"
         /// </summary>
@@ -156,24 +119,36 @@ namespace ContainerShip
         private void listBoxMarina_SelectedIndexChanged(object sender, EventArgs e) => Draw();
 
         /// <summary>
-        /// Добавление объекта в класс-хранилище
+        /// Обработка нажатия кнопки "Добавить судно"
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ButtonAddShip_Click(object sender, EventArgs e)
+        {
+            var windowsFormShipConfig = new WindowsFormShipConfig();
+            windowsFormShipConfig.AddEvent(AddShip);
+            windowsFormShipConfig.Show();
+        }
+        /// <summary>
+        /// Метод добавления машины
         /// </summary>
         /// <param name="car"></param>
-        private void AddToMarina(Ship ship)
+        private void AddShip(ITransport ship)
         {
-            if (listBoxMarina.SelectedIndex > -1)
+            if (ship != null && listBoxMarina.SelectedIndex > -1)
             {
-                if (_marinaCollection[listBoxMarina.SelectedItem.ToString()] + ship)
+                if
+                ((_marinaCollection[listBoxMarina.SelectedItem.ToString()]) + ship)
                 {
                     Draw();
                 }
                 else
                 {
-                    MessageBox.Show("Парковка переполнена");
+                    MessageBox.Show("Судно не удалось поставить");
                 }
             }
-
         }
+
 
     }
 }

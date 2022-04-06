@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ContainerShip
 {
-    public interface IDrawObject
+    public interface ITransport
     {
         /// <summary>
         /// Шаг объекта
@@ -15,7 +15,8 @@ namespace ContainerShip
         /// <summary>
         /// Цвет объекта
         /// </summary>
-        Color BodyColor { get; }
+        void SetMainColor(Color color);
+
         /// <summary>
         /// Установка позиции объекта
         /// </summary>

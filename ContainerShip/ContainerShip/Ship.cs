@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ContainerShip
 {
-    public class Ship : IDrawObject
+    public class Ship : ITransport
     {
         /// <summary>
         /// Скорость
@@ -19,7 +19,7 @@ namespace ContainerShip
         /// <summary>
         /// Цвет
         /// </summary>
-        public Color BodyColor { private set; get; }
+        public Color MainColor { private set; get; }
         public float Step => Speed * 100 / Weight;
         /// <summary>
         /// Левая координата отрисовки 
@@ -55,11 +55,11 @@ namespace ContainerShip
         /// <param name="speed">Скорость</param>
         /// <param name="weight">Веc</param>
         /// <param name="bodyColor">Цвет</param>
-        public Ship(int speed, float weight, Color bodyColor)
+        public Ship(int speed, float weight, Color mainColor)
         {
             Speed = speed;
             Weight = weight;
-            BodyColor = bodyColor;
+            MainColor = mainColor;
         }
         /// <summary>
         /// Конструктор
@@ -69,14 +69,15 @@ namespace ContainerShip
         /// <param name="bodyColor">Цвет</param>
         /// <param name="shipWidth">Ширина объекта</param>
         /// <param name="shipHeight">Высота объекта</param>
-        protected Ship(int speed, float weight, Color bodyColor, int shipWidth, int shipHeight)
+        protected Ship(int speed, float weight, Color mainColor, int shipWidth, int shipHeight)
         {
             Speed = speed;
             Weight = weight;
-            BodyColor = bodyColor;
+            MainColor = mainColor;
             _shipWidth = shipWidth;
             _shipHeight = shipHeight;
         }
+        public void SetMainColor(Color color) => MainColor = color;
         public void SetObject(float x, float y, int width, int height)
         {
             _startPosX = x;
@@ -162,7 +163,7 @@ namespace ContainerShip
                 return;
             }
             Pen pen = new(Color.Black);
-            Brush br = new SolidBrush(BodyColor);
+            Brush br = new SolidBrush(MainColor);
             g.FillRectangle(br, _startPosX.Value, _startPosY.Value + 18, 85, 5);
             g.FillRectangle(br, _startPosX.Value + 4, _startPosY.Value + 21, 72, 6);
             g.FillRectangle(br, _startPosX.Value + 10, _startPosY.Value + 21, 57, 9);

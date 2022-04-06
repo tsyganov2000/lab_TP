@@ -11,7 +11,7 @@ namespace ContainerShip
         /// <summary>
         /// Словарь (хранилище) с пристанями
         /// </summary>
-        private Dictionary<string, Marina<IDrawObject>> _marinaStages;
+        private Dictionary<string, Marina<ITransport>> _marinaStages;
         /// <summary>
         /// Возвращение списка названий пристань
         /// </summary>
@@ -31,7 +31,7 @@ namespace ContainerShip
         /// <param name="pictureHeight"></param>
         public MarinaCollection(int pictureWidth, int pictureHeight)
         {
-            _marinaStages = new Dictionary<string, Marina<IDrawObject>>();
+            _marinaStages = new Dictionary<string, Marina<ITransport>>();
             _pictureWidth = pictureWidth;
             _pictureHeight = pictureHeight;
         }
@@ -42,7 +42,7 @@ namespace ContainerShip
         {
             if (!_marinaStages.ContainsKey(name))
             {
-                _marinaStages.Add(name, new Marina<IDrawObject>(_pictureWidth, _pictureHeight));
+                _marinaStages.Add(name, new Marina<ITransport>(_pictureWidth, _pictureHeight));
             }
         }
         /// <summary>
@@ -58,7 +58,7 @@ namespace ContainerShip
         /// </summary>
         /// <param name="ind"></param>
         /// <returns></returns>
-        public Marina<IDrawObject> this[string ind]
+        public Marina<ITransport> this[string ind]
         {
             get
             {

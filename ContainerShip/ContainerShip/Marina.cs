@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ContainerShip
 {
-    public class Marina<T> where T : class, IDrawObject
+    public class Marina<T> where T : class, ITransport
     {
         /// <summary>
         /// Список объектов, которые храним
@@ -45,7 +45,7 @@ namespace ContainerShip
             _maxCount = width * height;
             _pictureWidth = picWidth;
             _pictureHeight = picHeight;
-            _places = new List<T>() { null, null, null, null, null,
+            _places = new List<T>(_maxCount) { null, null, null, null, null,
                 null, null, null, null, null,
                 null, null, null, null, null };
 

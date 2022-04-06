@@ -4,7 +4,7 @@ namespace ContainerShip
 {
     public partial class WindowsFormContainerShip : Form
     {
-        private IDrawObject _ship;
+        private ITransport _ship;
         public WindowsFormContainerShip()
         {
             InitializeComponent();
@@ -13,7 +13,7 @@ namespace ContainerShip
         /// Передача машины на форму
         /// </summary>
         /// <param name="car"></param>
-        public void SetShip(IDrawObject ship)
+        public void SetShip(ITransport ship)
         {
             _ship = ship;
             Draw();

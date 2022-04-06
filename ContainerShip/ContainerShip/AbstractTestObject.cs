@@ -19,12 +19,12 @@ namespace ContainerShip
         /// <summary>
         /// Объект тестирования
         /// </summary>
-        protected IDrawObject _object;
+        protected ITransport _object;
         /// <summary>
         /// Передача объекта
         /// </summary>
         /// <param name="obj"></param>
-        public void Init(IDrawObject obj)
+        public void Init(ITransport obj)
         {
             _object = obj;
         }
