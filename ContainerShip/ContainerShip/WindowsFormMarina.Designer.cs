@@ -45,6 +45,7 @@
             this.загрузитьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.buttonSort = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMarina)).BeginInit();
             this.groupBoxPlace.SuspendLayout();
             this.menuStripFile.SuspendLayout();
@@ -145,9 +146,9 @@
             // 
             // buttonAddShip
             // 
-            this.buttonAddShip.Location = new System.Drawing.Point(644, 268);
+            this.buttonAddShip.Location = new System.Drawing.Point(644, 297);
             this.buttonAddShip.Name = "buttonAddShip";
-            this.buttonAddShip.Size = new System.Drawing.Size(115, 64);
+            this.buttonAddShip.Size = new System.Drawing.Size(115, 43);
             this.buttonAddShip.TabIndex = 8;
             this.buttonAddShip.Text = "Добавить судно";
             this.buttonAddShip.UseVisualStyleBackColor = true;
@@ -175,14 +176,14 @@
             // сохранитьToolStripMenuItem
             // 
             this.сохранитьToolStripMenuItem.Name = "сохранитьToolStripMenuItem";
-            this.сохранитьToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.сохранитьToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.сохранитьToolStripMenuItem.Text = "Сохранить";
             this.сохранитьToolStripMenuItem.Click += new System.EventHandler(this.сохранитьToolStripMenuItem_Click);
             // 
             // загрузитьToolStripMenuItem
             // 
             this.загрузитьToolStripMenuItem.Name = "загрузитьToolStripMenuItem";
-            this.загрузитьToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.загрузитьToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.загрузитьToolStripMenuItem.Text = "Загрузить";
             this.загрузитьToolStripMenuItem.Click += new System.EventHandler(this.загрузитьToolStripMenuItem_Click);
             // 
@@ -194,11 +195,22 @@
             // 
             this.openFileDialog.Filter = "txt file | *.txt";
             // 
+            // buttonSort
+            // 
+            this.buttonSort.Location = new System.Drawing.Point(645, 256);
+            this.buttonSort.Name = "buttonSort";
+            this.buttonSort.Size = new System.Drawing.Size(115, 23);
+            this.buttonSort.TabIndex = 10;
+            this.buttonSort.Text = "Сортировать";
+            this.buttonSort.UseVisualStyleBackColor = true;
+            this.buttonSort.Click += new System.EventHandler(this.buttonSort_Click);
+            // 
             // WindowsFormMarina
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(764, 454);
+            this.Controls.Add(this.buttonSort);
             this.Controls.Add(this.buttonAddShip);
             this.Controls.Add(this.buttonDelMarina);
             this.Controls.Add(this.listBoxMarina);
@@ -240,5 +252,6 @@
         private ToolStripMenuItem загрузитьToolStripMenuItem;
         private SaveFileDialog saveFileDialog;
         private OpenFileDialog openFileDialog;
+        private Button buttonSort;
     }
 }

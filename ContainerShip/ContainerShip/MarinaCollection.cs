@@ -1,12 +1,14 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace ContainerShip
 {
-    public class MarinaCollection
+    public class MarinaCollection : IEnumerator<string>, IEnumerable<string>
     {
         /// <summary>
         /// Словарь (хранилище) с пристанями
@@ -15,7 +17,7 @@ namespace ContainerShip
         /// <summary>
         /// Возвращение списка названий пристань
         /// </summary>
-        public List<string> Keys => _marinaStages.Keys.ToList();
+        public List<string> _keys => _marinaStages.Keys.ToList();
         /// <summary>
         /// Ширина окна отрисовки
         /// </summary>
@@ -28,6 +30,18 @@ namespace ContainerShip
         /// Разделитель для записи информации по объекту в файл
         /// </summary>
         protected readonly char separator = ':';
+        /// <summary>
+        /// Текущий элемент для вывода через IEnumerator (будет обращаться по  своему индексу к ключу словаря, по которму будет возвращаться запись)
+        /// </summary>
+        private int _currentIndex = -1;
+        /// <summary>
+        /// Возвращение текущего элемента для IEnumerator
+        /// </summary>
+        public string Current => _keys[_currentIndex];
+        /// <summary>
+        /// Возвращение текущего элемента для IEnumerator
+        /// </summary>
+        object IEnumerator.Current => _keys[_currentIndex];
         /// <summary>
         /// Конструктор
         /// </summary>
@@ -164,5 +178,38 @@ namespace ContainerShip
                 _ = _marinaStages[key] + ship;
             }
         }
+        /// <summary>
+        /// Метод от IDisposable (унаследован в IEnumerator). В данном случае, логики в нем не требуется
+        /// </summary>
+        public void Dispose() { }
+        /// <summary>
+        /// Переход к следующему элементу
+        /// </summary>
+        /// <returns></returns>
+        public bool MoveNext()
+        {
+            if (_currentIndex + 1 >= _marinaStages.Count)
+            {
+                Reset();
+                return false;
+            }
+            _currentIndex++;
+            return true;
+        }
+        /// <summary>
+        /// Сброс при достижении конца
+        /// </summary>
+        public void Reset() => _currentIndex = -1;
+        /// <summary>
+        /// Получение ссылки на объект от класса, реализующего IEnumerator
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerator<string> GetEnumerator() => this;
+        /// <summary>
+        /// Получение ссылки на объект от класса, реализующего IEnumerable
+        /// </summary>
+        /// <returns></returns>
+        IEnumerator IEnumerable.GetEnumerator() => this;
+
     }
 }

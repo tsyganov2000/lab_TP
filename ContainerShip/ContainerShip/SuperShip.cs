@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ContainerShip
 {
-    public class SuperShip : Ship
+    public class SuperShip : Ship, IEquatable<SuperShip>
     {
         /// <summary>
         /// Дополнительный цвет
@@ -118,6 +119,54 @@ namespace ContainerShip
             }
         }
         public override string ToString() => $"{base.ToString()}{_separator}{DopColor.Name}{_separator}{Crane}{_separator}{Container}";
-
+        /// <summary>
+        /// Метод интерфейса IEquatable для класса SuperShip
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool Equals(SuperShip other)
+        {
+            var res = (this as Ship).Equals(other as Ship);
+            if (!res)
+            {
+                return res;
+            }
+            if (GetType().Name != other.GetType().Name)
+            {
+                return false;
+            }
+            if (DopColor != other.DopColor)
+            {
+                return false;
+            }
+            if (Crane != other.Crane)
+            {
+                return false;
+            }
+            if (Container != other.Container)
+            {
+                return false;
+            }
+            return true;
+        }
+        public override bool Equals(Object obj)
+        {
+            if (obj == null)
+            {
+                return false;
+            }
+            if (!(obj is SuperShip shipObj))
+            {
+                return false;
+            }
+            else
+            {
+                return Equals(shipObj);
+            }
+        }
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 }

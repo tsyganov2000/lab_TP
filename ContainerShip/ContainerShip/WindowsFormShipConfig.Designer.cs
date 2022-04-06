@@ -323,7 +323,7 @@
             this.labelDopColor.Text = "Доп. цвет";
             this.labelDopColor.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.labelDopColor.DragDrop += new System.Windows.Forms.DragEventHandler(this.LabelDopColor_DragDrop);
-            this.labelDopColor.DragEnter += new System.Windows.Forms.DragEventHandler(this.LabelMainColor_DragEnter);
+            this.labelDopColor.DragEnter += new System.Windows.Forms.DragEventHandler(this.LabelDopColor_DragEnter);
             // 
             // labelMainColor
             // 

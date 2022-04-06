@@ -36,9 +36,9 @@ namespace ContainerShip
         {
             int index = listBoxMarina.SelectedIndex;
             listBoxMarina.Items.Clear();
-            for (int i = 0; i < _marinaCollection.Keys.Count; i++)
+            for (int i = 0; i < _marinaCollection._keys.Count; i++)
             {
-                listBoxMarina.Items.Add(_marinaCollection.Keys[i]);
+                listBoxMarina.Items.Add(_marinaCollection._keys[i]);
             }
             if (listBoxMarina.Items.Count > 0 && (index == -1 || index >=
             listBoxMarina.Items.Count))
@@ -186,6 +186,11 @@ namespace ContainerShip
                     MessageBox.Show(ex.Message, "Переполнение", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     logger.Warn($"Ошибка: пристань переполнена");
                 }
+                catch (MarinaAlreadyHaveException ex)
+                {
+                    MessageBox.Show(ex.Message, "Дублирование", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    logger.Warn($"Ошибка: такое судно уже есть на пристани");
+                }
                 catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message, "Неизвестная ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -243,6 +248,17 @@ namespace ContainerShip
                     MessageBox.Show("Не загрузили", "Результат", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     logger.Warn($"Ошибка: не удалось загрузить");
                 }
+            }
+
+        }
+
+        private void buttonSort_Click(object sender, EventArgs e)
+        {
+            if (listBoxMarina.SelectedIndex > -1)
+            {
+                _marinaCollection[listBoxMarina.SelectedItem.ToString()].Sort();
+                Draw();
+                logger.Info("Сортировка уровней");
             }
 
         }
