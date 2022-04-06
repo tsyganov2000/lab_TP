@@ -4,14 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace ContainerShip
 {
     public class Marina<T> where T : class, IDrawObject
     {
         /// <summary>
-        /// Массив объектов, которые храним
+        /// Список объектов, которые храним
         /// </summary>
-        private readonly T[] _places;
+        private readonly List<T> _places;
+        /// <summary>
+        /// Максимальное количество мест на пристани
+        /// </summary>
+        private readonly int _maxCount;
         /// <summary>
         /// Ширина окна отрисовки
         /// </summary>
@@ -21,11 +26,11 @@ namespace ContainerShip
         /// </summary>
         private readonly int _pictureHeight;
         /// <summary>
-        /// Размер парковочного места (ширина)
+        /// Размер места (ширина)
         /// </summary>
         private readonly int _placeSizeWidth = 210;
         /// <summary>
-        /// Размер парковочного места (высота)
+        /// Размер места (высота)
         /// </summary>
         private readonly int _placeSizeHeight = 80;
         /// <summary>
@@ -37,27 +42,33 @@ namespace ContainerShip
         {
             int width = picWidth / _placeSizeWidth;
             int height = picHeight / _placeSizeHeight;
-            _places = new T[width * height];
+            _maxCount = width * height;
             _pictureWidth = picWidth;
             _pictureHeight = picHeight;
+            _places = new List<T>() { null, null, null, null, null,
+                null, null, null, null, null,
+                null, null, null, null, null };
+
         }
         /// <summary>
         /// Перегрузка оператора сложения
-        /// Логика действия: на парковку добавляется автомобиль
+        /// Логика действия: на пристань добавляется корабль
         /// </summary>
-        /// <param name="p">Парковка</param>
-        /// <param name="car">Добавляемый корабль</param>
+        /// <param name="p">Пристань</param>
+        /// <param name="ship">Добавляемый корабль</param>
         /// <returns></returns>
         public static bool operator +(Marina<T> p, T ship)
         {
-            for (int i = 0; i < p._places.Length; i++)
+            if (p._places.Count == p._maxCount + 1)
+            {
+                return false;
+            }
+            for (int i = 0; i < p._maxCount; i++)
             {
                 if (p._places[i] == null)
                 {
                     p._places[i] = ship;
-                    p._places[i].SetObject(5 + i / 5 * p._placeSizeWidth + 5,
-                     i % 5 * p._placeSizeHeight + 15, p._pictureWidth,
-                    p._pictureHeight);
+                    p._places[i].SetObject(5 + i / 5 * p._placeSizeWidth + 5, i % 5 * p._placeSizeHeight + 15, p._pictureWidth,  p._pictureHeight);
                     return true;
                 }
             }
@@ -65,17 +76,18 @@ namespace ContainerShip
         }
         /// <summary>
         /// Перегрузка оператора вычитания
-        /// Логика действия: с парковки забираем автомобиль
+        /// Логика действия: с пристани забираем корабль
         /// </summary>
-        /// <param name="p">Парковка</param>
+        /// <param name="p">Пристань</param>
         /// <param name="index">Индекс места, с которого пытаемся извлечь объект</param>
         /// <returns></returns>
         public static T operator -(Marina<T> p, int index)
         {
-            if (index < 0 || index > p._places.Length)
+            if (index < 0 || index > p._places.Count)
             {
                 return null;
             }
+            ;
             if (p._places[index] != null)
             {
                 T ship = p._places[index];
@@ -85,19 +97,20 @@ namespace ContainerShip
             return null;
         }
         /// <summary>
-        /// Метод отрисовки парковки
+        /// Метод отрисовки пристани
         /// </summary>
         /// <param name="g"></param>
         public void Draw(Graphics g)
         {
             DrawMarking(g);
-            for (int i = 0; i < _places.Length; i++)
+            for (int i = 0; i < _places.Count; i++)
             {
-                _places[i]?.DrawObject(g);
+                _places[i]?.SetObject(5 + i / 5 * _placeSizeWidth + 5, i % 5 * _placeSizeHeight + 15, _pictureWidth, _pictureHeight);
+                _places[i]?.DrawTransport(g);
             }
         }
         /// <summary>
-        /// Метод отрисовки разметки парковочных мест
+        /// Метод отрисовки разметки
         /// </summary>
         /// <param name="g"></param>
         private void DrawMarking(Graphics g)

@@ -34,7 +34,7 @@ namespace ContainerShip
         /// Отрисовка объекта
         /// </summary>
         /// <param name="g"></param>
-        void DrawObject(Graphics g);
+        void DrawTransport(Graphics g);
         /// <summary>
         /// Получение текущей позиции объекта
         /// </summary>

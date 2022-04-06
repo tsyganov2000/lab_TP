@@ -25,7 +25,7 @@ namespace ContainerShip
         {
             Bitmap bmp = new(pictureBox.Width, pictureBox.Height);
             Graphics gr = Graphics.FromImage(bmp);
-            _ship?.DrawObject(gr);
+            _ship?.DrawTransport(gr);
             pictureBox.Image = bmp;
         }
         /// <summary>
