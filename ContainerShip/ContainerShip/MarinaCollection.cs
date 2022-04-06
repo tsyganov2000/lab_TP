@@ -25,6 +25,10 @@ namespace ContainerShip
         /// </summary>
         private readonly int _pictureHeight;
         /// <summary>
+        /// Разделитель для записи информации по объекту в файл
+        /// </summary>
+        protected readonly char separator = ':';
+        /// <summary>
         /// Конструктор
         /// </summary>
         /// <param name="pictureWidth"></param>
@@ -69,6 +73,104 @@ namespace ContainerShip
                 return null;
             }
         }
+        /// <summary>
+        /// Метод записи информации в файл
+        /// </summary>
+        /// <param name="text">Строка, которую следует записать</param>
+        /// <param name="stream">Поток для записи</param>
+        private void WriteToFile(string text, FileStream stream)
+        {
+            byte[] info = new UTF8Encoding(true).GetBytes(text);
+            stream.Write(info, 0, info.Length);
+        }
+        /// Сохранение информации по суднам на пристанях в файл
+        /// </summary>
+        /// <param name="filename">Путь и имя файла</param>
+        /// <returns></returns>
+        public bool SaveData(string filename)
+        {
+            if (File.Exists(filename))
+            {
+                File.Delete(filename);
+            }
+            using (FileStream fs = new FileStream(filename, FileMode.Create))
+            {
+                WriteToFile($"MarinaCollection{Environment.NewLine}", fs);
+                foreach (var level in _marinaStages)
+                {
+                    //Начинаем парковку
+                    WriteToFile($"Marina{separator}{level.Key}{Environment.NewLine}", fs);
+                    foreach (var car in level.Value.GetNext())
+                    {
+                        //если место не пустое
+                        if (car != null)
+                        {
+                            WriteToFile($"{car.GetType().Name}{separator}{car}{Environment.NewLine}", fs);
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+        /// <summary>
+        /// Загрузка нформации по суднам на пристанях из файла
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <returns></returns>
+        public bool LoadData(string filename)
+        {
+            if (!File.Exists(filename))
+            {
+                return false;
+            }
+            string bufferTextFromFile = "";
+            using (FileStream fs = new FileStream(filename, FileMode.Open))
+            {
+                byte[] b = new byte[fs.Length];
+                UTF8Encoding temp = new UTF8Encoding(true);
+                while (fs.Read(b, 0, b.Length) > 0)
+                {
+                    bufferTextFromFile += temp.GetString(b);
+                }
+            }
+            var strs = bufferTextFromFile.Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+            if (!strs[0].Contains("MarinaCollection"))
+            {
+                //если нет такой записи, то это не те данные
+                return false;
+            }
+            //очищаем записи
+            _marinaStages.Clear();
+            ITransport ship = null;
+            string key = string.Empty;
+            for (int i = 1; i < strs.Length; ++i)
+            {
+                //идем по считанным записям
+                if (strs[i].Contains("Marina"))
+                {
+                    //начинаем новую парковку
+                    key = strs[i].Split(separator)[1];
+                    _marinaStages.Add(key, new Marina<ITransport>(_pictureWidth, _pictureHeight));
+                    continue;
+                }
+                if (strs[i].Split(separator)[0] == "Ship")
+                {
+                    ship = new Ship(strs[i].Split(separator)[1]);
+                }
+                else if (strs[i].Split(separator)[0] == "SuperShip")
+                {
+                    ship = new SuperShip(strs[i].Split(separator)[1]);
+                }
+                var result = _marinaStages[key] + ship;
+                if (!result)
+                {
+                    return false;
+                }
+            }
+            return true;
+
+        }
+
 
     }
 }

@@ -20,8 +20,20 @@ namespace ContainerShip
         /// Признак наличия контейнеров
         /// </summary>
         public bool Container { private set; get; }
-        public void SetDopColor(Color color) => DopColor = color;
-
+        /// <summary>
+        /// Конструктор для загрузки с файла
+        /// </summary>
+        /// <param name="info"></param>
+        public SuperShip(string info) : base(info)
+        {
+            string[] strs = info.Split(_separator);
+            if (strs.Length == 6)
+            {
+                DopColor = Color.FromName(strs[3]);
+                Crane = Convert.ToBoolean(strs[4]);
+                Container = Convert.ToBoolean(strs[5]);
+            }
+        }
         /// <summary>
         /// Инициализация свойств
         /// </summary>
@@ -38,6 +50,7 @@ namespace ContainerShip
             Crane = crane;
             Container = container;
         }
+        public void SetDopColor(Color color) => DopColor = color;
         public override void MoveTransport(Direction direction, int leftIndent = 0, int topIndent = 0)
         {
             _makeStep = false;
@@ -104,5 +117,7 @@ namespace ContainerShip
                 g.FillRectangle(br, _startPosX.Value + 54, _startPosY.Value + 11, 4, 7);
             }
         }
+        public override string ToString() => $"{base.ToString()}{_separator}{DopColor.Name}{_separator}{Crane}{_separator}{Container}";
+
     }
 }
